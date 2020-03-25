@@ -116,6 +116,8 @@ func (p *Plugin) ExecuteCommand(c *plugin.Context, args *model.CommandArgs) (*mo
 				ports := strings.Fields(fmt.Sprint(data["ports"]))
 				// Adds ports in as comma seperated string
 				resp += fmt.Sprintf("| Port(s) | %v |\n", nobraces.Replace(strings.Join(ports, ", ")))
+				hostnames := strings.Fields(fmt.Sprint(data["hostnames"]))
+				resp += fmt.Sprintf("| Hostnames(s) | %v |\n", nobraces.Replace(strings.Join(hostnames, ", ")))
 				resp += fmt.Sprintf("\n\n\nMore information on Shodan at: [https://www.shodan.io/host/%v](https://www.shodan.io/host/%v)", parameter, parameter)
 
 				p.postCommandResponse(args, resp)
