@@ -1,0 +1,27 @@
+{
+    "id": "com.mattermost.plugin-shodan",
+    "name": "Shodan Plugin",
+    "description": "Shodan plugin for Mattermost.",
+    "homepage_url": "https://github.com/incidrthreat/mattermost-plugin-shodan",
+    "support_url": "https://github.com/incidrthreat/mattermost-plugin-shodan/issues",
+    "icon_path": "assets/icon.svg",
+    "version": "0.1.0",
+    "min_server_version": "5.12.0",
+    "server": {
+        "executables": {
+            "linux-amd64": "server/dist/plugin-linux-amd64",
+            "darwin-amd64": "server/dist/plugin-darwin-amd64",
+            "windows-amd64": "server/dist/plugin-windows-amd64.exe"
+        }
+    },
+    "settings_schema": {
+        "header": "Shodan configuration settings",
+        "footer": "* To report an issue, make a suggestion or a contribution, [check the repository](https://github.com/incidrthreat/mattermost-plugin-shodan).",
+        "settings": [{
+            "key": "shodanAPI",
+            "display_name": "Shodan API Key",
+            "type": "text",
+            "help_text": "Visit https://account.shodan.io/ for your API key"
+        }]
+    }
+}
