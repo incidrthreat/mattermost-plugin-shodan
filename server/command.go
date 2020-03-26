@@ -1,13 +1,14 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
 
-	"github.com/incidrthreat/shodan/restapi"
+	"github.com/incidrthreat/shodan"
 	"github.com/mattermost/mattermost-server/v5/model"
 	"github.com/mattermost/mattermost-server/v5/plugin"
 )
@@ -69,6 +70,10 @@ func (p *Plugin) ExecuteCommand(c *plugin.Context, args *model.CommandArgs) (*mo
 	// Empty Vars
 	action := ""
 	parameter := ""
+	// assigns ShodanAPI (supplied in plugin settings) to shodanAPI var
+	shodanAPI := shodan.Configure(config.ShodanAPI)
+	API := shodanAPI.RestAPI()
+	ctx := context.Background()
 
 	if len(split) > 1 {
 		action = split[1]
@@ -93,7 +98,7 @@ func (p *Plugin) ExecuteCommand(c *plugin.Context, args *model.CommandArgs) (*mo
 	// Search Methods
 	// Search Host Information
 	case "search":
-		restapi.HostInfo(args, parameter)
+		p.HostInfo(args, parameter)
 		return &model.CommandResponse{}, nil
 
 	case "ports":
