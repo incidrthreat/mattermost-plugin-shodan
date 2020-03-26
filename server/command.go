@@ -301,8 +301,9 @@ func (p *Plugin) ShodanHostSearch(args *model.CommandArgs, ip string) {
 			// Adds ports in as comma seperated string
 			resp += fmt.Sprintf("| Port(s) | %v |\n", nobraces.Replace(strings.Join(ports, ", ")))
 			hostnames := strings.Fields(fmt.Sprint(data["hostnames"]))
-			if data["hostnames"] != "[]" {
-				resp += fmt.Sprintf("| Hostname(s) | %v |\n", nobraces.Replace(strings.Join(hostnames, ", ")))
+			jhostnames := nobraces.Replace(strings.Join(hostnames, ", "))
+			if jhostnames != "" {
+				resp += fmt.Sprintf("| Hostname(s) | %v |\n", jhostnames)
 			}
 			resp += fmt.Sprintf("\n\n\nMore information on Shodan at: [https://www.shodan.io/host/%v](https://www.shodan.io/host/%v)", ip, ip)
 
