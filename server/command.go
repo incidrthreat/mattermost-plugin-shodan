@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"regexp"
-	"sort"
 	"strconv"
 	"strings"
 
@@ -96,38 +95,15 @@ func (p *Plugin) ExecuteCommand(c *plugin.Context, args *model.CommandArgs) (*mo
 	// Search Methods
 	// Search Host Information
 	case "search":
-		p.ShodanHostSearch(args, parameter)
+		p.HostInfo(args, parameter)
 		return &model.CommandResponse{}, nil
 
-	// On-Demand Scan Methods
-	// Protocols Case
-	case "protocols":
+	case "ports":
 		if len(parameter) >= 1 {
 			p.postCommandResponse(args, fmt.Sprintf("This command has no additional syntax. Please remove `%v` from your command and try again.", parameter))
 			return &model.CommandResponse{}, nil
 		}
-		res, _ := restAPI.Scan().Protocols(ctx)
-		data := make(map[string]interface{})
-
-		err := json.Unmarshal([]byte(res), &data)
-		if err != nil {
-			return &model.CommandResponse{}, nil
-		}
-
-		protocols := []string{}
-
-		for protocol := range data {
-			protocols = append(protocols, protocol)
-		}
-
-		sort.Strings(protocols)
-
-		resp := fmt.Sprint("| **_Protocol_** | **_Description_** |\n|:-|:-|\n")
-
-		for _, value := range protocols {
-			resp += fmt.Sprintf("| %v | %v |\n", value, data[value])
-		}
-		p.postCommandResponse(args, resp)
+		p.AllPorts(args)
 		return &model.CommandResponse{}, nil
 
 	// Scan Case
@@ -267,51 +243,4 @@ func (p *Plugin) ExecuteCommand(c *plugin.Context, args *model.CommandArgs) (*mo
 	p.postCommandResponse(args, fmt.Sprintf("`/shodan %v` is not a valid command.  Check `/shodan help` to see all available options/syntax and try again.\n", action))
 
 	return &model.CommandResponse{}, nil
-}
-
-// ShodanHostSearch ...
-func (p *Plugin) ShodanHostSearch(args *model.CommandArgs, ip string) {
-	reIP, _ := regexp.Compile(`^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$`)
-	// removes spaces around parameter input
-	config := p.getConfiguration()
-
-	nobraces := strings.NewReplacer("[", "", "]", "")
-
-	// assigns ShodanAPI (supplied in plugin settings) to shodanAPI var
-	shodanAPI := shodan.Configure(config.ShodanAPI)
-	restAPI := shodanAPI.RestAPI()
-	ctx := context.Background()
-	// regex to check if proper IP
-	if reIP.MatchString(ip) {
-		res, _ := restAPI.Search().HostInfo(ctx, ip, false)
-
-		var data map[string]interface{}
-		json.Unmarshal([]byte(res), &data)
-		if res != "Invalid IP" {
-			resp := "#### Search Results\n"
-			resp += fmt.Sprintf("| Host | %v |\n|:-|:-|\n", ip)
-			if data["city"] != nil {
-				resp += fmt.Sprintf("| City | %v |\n", data["city"])
-			}
-			resp += fmt.Sprintf("| Country | %v |\n", data["country_name"])
-			resp += fmt.Sprintf("| Organization | %v |\n", data["org"])
-			resp += fmt.Sprintf("| ISP | %v |\n", data["isp"])
-			// converts interface to []string
-			ports := strings.Fields(fmt.Sprint(data["ports"]))
-			// Adds ports in as comma seperated string
-			resp += fmt.Sprintf("| Port(s) | %v |\n", nobraces.Replace(strings.Join(ports, ", ")))
-			hostnames := strings.Fields(fmt.Sprint(data["hostnames"]))
-			jhostnames := nobraces.Replace(strings.Join(hostnames, ", "))
-			if jhostnames != "" {
-				resp += fmt.Sprintf("| Hostname(s) | %v |\n", jhostnames)
-			}
-			resp += fmt.Sprintf("\n\n\nMore information on Shodan at: [https://www.shodan.io/host/%v](https://www.shodan.io/host/%v)", ip, ip)
-
-			p.postCommandResponse(args, resp)
-		} else {
-			p.postCommandResponse(args, fmt.Sprintf("#### No Data found on %v", ip))
-		}
-	} else {
-		p.postCommandResponse(args, fmt.Sprintf("%v is not a valid IP address", ip))
-	}
 }
