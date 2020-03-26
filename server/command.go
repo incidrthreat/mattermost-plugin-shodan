@@ -289,7 +289,7 @@ func (p *Plugin) ShodanHostSearch(args *model.CommandArgs, ip string) {
 		json.Unmarshal([]byte(res), &data)
 		if res != "Invalid IP" {
 			resp := "#### Search Results\n"
-			resp += fmt.Sprintf("| %v |  |\n|:-|:-|\n", ip)
+			resp += fmt.Sprintf("|  | %v |\n|:-|:-|\n", ip)
 			if data["city"] != nil {
 				resp += fmt.Sprintf("| City | %v |\n", data["city"])
 			}
