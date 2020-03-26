@@ -1,5 +1,6 @@
 dist
 releases
+test.go
 
 # Mac
 .DS_Store
