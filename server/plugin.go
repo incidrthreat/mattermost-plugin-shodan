@@ -67,4 +67,8 @@ func (p *Plugin) OnActivate() error {
 	return nil
 }
 
+func main() {
+	plugin.ClientMain(&Plugin{})
+}
+
 // See https://developers.mattermost.com/extend/plugins/server/reference/
