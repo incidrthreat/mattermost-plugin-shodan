@@ -14,23 +14,26 @@ import (
 )
 
 // CommandHelp displays command info
-const CommandHelp = "## **_Mattermost Shodan Plugin - Command Help_**\n" +
-	"#### Search Commands\n" +
-	"* |/shodan search <ip>| - Searches shodan with provided ip\n" +
-	"***\n" +
-	"#### Scan Commands\n" +
-	"* |/shodan scan <ip>| - Initiates a scan with provided ip\n" +
-	"* |/shodan scanstatus <id>| - Returns scan status\n" +
-	"* |/shodan protocols| - Returns a list of all protocols scannable with Shodan\n" +
-	"***\n" +
-	"#### DNS Commands\n" +
-	"* |/shodan dnslookup <hostname>| - Returns IPv4 Address of provided hostname\n" +
-	"* |/shodan dnsinfo <hostname>| - DNS info from provided hostname\n" +
-	"* |/shodan dnsreverse <ip>| - Hostname resolution from provided IP\n" +
-	"***\n" +
-	"#### Misc Commands\n" +
-	"* |/shodan honeyscore <ip>| - Is that host a honeypot? Scale of 0.0 to 1.0\n" +
-	"* |/shodan apistatus| - Returns the status of how many Query & Scan Credits remain\n"
+const (
+	CommandHelp = "## **_Mattermost Shodan Plugin - Command Help_**\n" +
+		"#### Search Commands\n" +
+		"* |/shodan search <ip>| - Searches shodan with provided ip\n" +
+		"***\n" +
+		"#### Scan Commands\n" +
+		"* |/shodan scan <ip>| - Initiates a scan with provided ip\n" +
+		"* |/shodan scanstatus <id>| - Returns scan status\n" +
+		"* |/shodan protocols| - Returns a list of all protocols scannable with Shodan\n" +
+		"***\n" +
+		"#### DNS Commands\n" +
+		"* |/shodan dnslookup <hostname>| - Returns IPv4 Address of provided hostname\n" +
+		"* |/shodan dnsinfo <hostname>| - DNS info from provided hostname\n" +
+		"* |/shodan dnsreverse <ip>| - Hostname resolution from provided IP\n" +
+		"***\n" +
+		"#### Misc Commands\n" +
+		"* |/shodan honeyscore <ip>| - Is that host a honeypot? Scale of 0.0 to 1.0\n" +
+		"* |/shodan apistatus| - Returns the status of how many Query & Scan Credits remain\n"
+	reIP = `^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$`
+)
 
 // InitCommand ...
 func getCommand() *model.Command {
@@ -58,7 +61,7 @@ func (p *Plugin) ExecuteCommand(c *plugin.Context, args *model.CommandArgs) (*mo
 
 	// Variables for commands
 	// IP address regex
-	reIP, _ := regexp.Compile(`^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$`)
+	reIP, _ := regexp.Compile(reIP)
 	// assigns configuration to config var
 	config := p.getConfiguration()
 	// removes `[` and `]` in data
