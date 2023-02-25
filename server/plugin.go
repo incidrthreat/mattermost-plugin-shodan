@@ -14,17 +14,12 @@ import (
 type Plugin struct {
 	plugin.MattermostPlugin
 
-	// configurationLock synchronizes access to the configuration.
 	configurationLock sync.RWMutex
 
-	// configuration is the active plugin configuration. Consult getConfiguration and
-	// setConfiguration for usage.
 	configuration *configuration
 
 	BotUserID string
 }
-
-// See https://developers.mattermost.com/extend/plugins/server/reference/
 
 // OnActivate checks if the configurations is valid and ensures the bot account exists
 func (p *Plugin) OnActivate() error {
@@ -71,4 +66,10 @@ func main() {
 	plugin.ClientMain(&Plugin{})
 }
 
-// See https://developers.mattermost.com/extend/plugins/server/reference/
+// Check takes care of error handling
+func (p *Plugin) Check(e error) *model.AppError {
+	if e != nil {
+		return &model.AppError{Message: e.Error()}
+	}
+	return nil
+}

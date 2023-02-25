@@ -16,7 +16,7 @@
     },
     "settings_schema": {
         "header": "Shodan configuration settings",
-        "footer": "* To report an issue, make a suggestion or a contribution, [check the repository](https://github.com/incidrthreat/mattermost-plugin-shodan).",
+        "footer": "* To report an issue, make a suggestion, or a contribution, [check the repository](https://github.com/incidrthreat/mattermost-plugin-shodan).",
         "settings": [{
             "key": "shodanAPI",
             "display_name": "Shodan API Key",

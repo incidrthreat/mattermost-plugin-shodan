@@ -7,4 +7,5 @@ test.go
 
 # VSCode
 .vscode
+.editorconfig
 
